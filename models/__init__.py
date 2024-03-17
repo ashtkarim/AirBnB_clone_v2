@@ -1,8 +1,13 @@
 #!/usr/bin/python3
-"""
-Module:__init__.py
-"""
-from models.engine import file_storage
+""" Import unique FileStorage instance """
+from os import getenv
 
-storage = file_storage.FileStorage()
-storage.reload()
+
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    from models.engine.db_storage import DBStorage
+    storage = DBStorage()
+    storage.reload()
+else:
+    from models.engine.file_storage import FileStorage
+    storage = FileStorage()
+    storage.reload()
