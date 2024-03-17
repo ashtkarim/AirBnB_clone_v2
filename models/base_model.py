@@ -10,7 +10,7 @@ from sqlalchemy import Column, String, DateTime
 Base = declarative_base()
 
 
-class BaseModel():
+class BaseModel:
     """
     create class BaseModel
     """
