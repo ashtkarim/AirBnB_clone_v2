@@ -62,7 +62,7 @@ class BaseModel():
         for key, value in dict.items():
             dict[key] = value
             if key in ['created_at', 'updated_at'] and \
-             isinstance(value, datetime):
+                    isinstance(value, datetime):
                 dict[key] = value.isoformat()
         dict.pop('_sa_instance_state', None)
         return dict
