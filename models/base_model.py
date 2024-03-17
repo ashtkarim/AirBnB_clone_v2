@@ -59,20 +59,12 @@ class BaseModel():
         """
         dict = self.__dict__.copy()
         dict['__class__'] = self.__class__.__name__
-        for key, value in self.__class__.items():
+        for key, value in dict.items():
             dict[key] = value
-            if key in ['created_at', 'updated_at']:
+            if key in ['created_at', 'updated_at'] and \
+             isinstance(value, datetime):
                 dict[key] = value.isoformat()
         dict.pop('_sa_instance_state', None)
-
-        # if isinstance(self.created_at, datetime):
-        #     dict['created_at'] = self.created_at.isoformat()
-        # else:
-        #     dict['created_at'] = self.created_at
-        # if isinstance(self.updated_at, datetime):
-        #     dict['updated_at'] = self.updated_at.isoformat()
-        # else:
-        #     dict['updated_at'] = self.updated_at
         return dict
 
     def delete(self):
