@@ -187,14 +187,13 @@ class HBNBCommand(cmd.Cmd):
         Prints all string representation of all instances
         """
         args = arg.split()
-        objects = storage.all()
+        objects = storage.all(args[0])
 
         if not args:
             print(["{}".format(v) for _, v in objects.items()])
             return
         if args[0] not in self.classes.keys():
             print("** class doesn't exist **")
-            return
         else:
             class_name = args[0]
             class_objs = []
@@ -202,6 +201,7 @@ class HBNBCommand(cmd.Cmd):
                 if key.startswith(class_name + "."):
                     class_objs.append(str(value))
             print(class_objs)
+
 
     def do_update(self, arg):
         """

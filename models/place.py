@@ -6,9 +6,14 @@ from sqlalchemy.orm import relationship
 import os
 from models.review import Review
 
+place_amenity = Table(
+    'place_amenity', Base.metadata,
+    Column('place_id', String(60), ForeignKey('places.id')),
+    Column('amenity_id', String(60), ForeignKey('amenities.id'))
+)
 
 
-class Place(BaseModel,Base):
+class Place(BaseModel, Base):
     """ class attributes """
     __tablename__ = 'places'
 
@@ -23,8 +28,11 @@ class Place(BaseModel,Base):
         price_by_night = Column(Integer, default=0, nullable=False)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        user = relationship("User", back_populates="places")
-        reviews = relationship('Review', back_populates="place", cascade="all, delete-orphan") 
+
+        reviews = relationship("Review", backref="place", cascade="all, delete-orphan")
+        amenities = relationship(
+            'Amenity', secondary=place_amenity,
+            back_populates='place_amenities', viewonly=False)
 
     else:
         city_id = ""
@@ -38,8 +46,13 @@ class Place(BaseModel,Base):
         latitude = 0.0
         longitude = 0.0
 
-
+        @property
         def reviews(self):
-            """returns the list of Review instances with place_id"""
+            """
+                Getter attribute reviews that returns the list
+                of Review instances
+                with place_id equals to the current Place.id
+            """
             from models import storage
-            return [review for review in storage.all(Review).values() if review.place_id == self.id]
+            return [review for review in storage.all(Review).values()
+                    if review.place_id == self.id]
