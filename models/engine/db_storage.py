@@ -12,9 +12,17 @@ from models.place import Place
 from models.review import Review
 from models.user import User
 
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    from models.place import place_amenity
+
+
+classes = {"State": State, "City": City, "User": User,
+        "Place": Place, "Review": Review, "Amenity": Amenity}
+
 
 class DBStorage:
     """private attributes"""
+
     __engine = None
     __session = None
 

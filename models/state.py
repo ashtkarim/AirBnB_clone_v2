@@ -17,14 +17,20 @@ class State(BaseModel, Base):
     __tablename__ = 'states'
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         name = Column(String(128), nullable=False)
-        cities = relationship('City', backref='state', cascade='all, delete')
+        cities = relationship('City', backref='state', cascade='all, delete, delete-orphan')
     else:
         name = ""
 
+        def __init__(*args, **kwargs):
+            """initializes state"""
+            super().__init__(*args, **kwargs)
+    if os.getenv('HBNB_TYPE_STORAGE') != 'db':
+        @proprety
         def cities(self):
             """
             getter attribute
             """
+            from models import storage
             match_cities = []
             all_cities = models.storage.all(City).value()
             for city in all_cities:
